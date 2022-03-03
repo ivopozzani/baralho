@@ -3,32 +3,6 @@ const displayCards = document.querySelector(".display-cards");
 const naipes = ["Paus", "Copas", "Ouros", "Espadas"];
 const cards = [];
 
-for (let a = 0; a < naipes.length; a++) {
-  for (let i = 0; i < 13; i++) {
-    switch (i) {
-      case 0:
-        obj = { naipe: naipes[a], numero: "A" };
-        break;
-      case 10:
-        obj = { naipe: naipes[a], numero: "J" };
-        break;
-      case 11:
-        obj = { naipe: naipes[a], numero: "Q" };
-        break;
-      case 12:
-        obj = { naipe: naipes[a], numero: "K" };
-        break;
-      default:
-        obj = { naipe: naipes[a], numero: `${i + 1}` };
-    }
-    cards.push(obj);
-  }
-}
-
-buttons.forEach((b) => {
-  b.addEventListener("click", (event) => HandleEventListener(event));
-});
-
 function HandleEventListener(event) {
   const naipeToFilter = event.currentTarget.textContent;
 
@@ -36,8 +10,8 @@ function HandleEventListener(event) {
 }
 
 function CreateCardsElements(naipeToFilter) {
-  const filtered = FilterNaipe(naipeToFilter);
-
+  const filtered = naipeToFilter == 'Reset' ?  cards : FilterNaipe(naipeToFilter);
+    
   nodeList = filtered.map((n) => {
     const newDiv = document.createElement("div");
     const newNaipe = document.createElement("p");
@@ -51,15 +25,39 @@ function CreateCardsElements(naipeToFilter) {
 }
 
 function FilterNaipe(naipeToFilter) {
-  filteredNaipe = cards.filter((card) => {
-    if (naipeToFilter === true) {
-      return true;
-    } else {
-      return card.naipe === naipeToFilter;
-    }
-  });
-
-  return filteredNaipe;
+  return cards.filter(card =>  card.naipe === naipeToFilter);
 }
 
-CreateCardsElements(true);
+function createCardsArray() {
+    for (let a = 0; a < naipes.length; a++) {
+	for (let i = 0; i < 13; i++) {
+	    switch (i) {
+	    case 0:
+		obj = { naipe: naipes[a], numero: "A" };
+		break;
+	    case 10:
+		obj = { naipe: naipes[a], numero: "J" };
+		break;
+	    case 11:
+		obj = { naipe: naipes[a], numero: "Q" };
+		break;
+	    case 12:
+		obj = { naipe: naipes[a], numero: "K" };
+		break;
+	    default:
+		obj = { naipe: naipes[a], numero: `${i + 1}` };
+	    }
+	    cards.push(obj);
+	}
+    }
+}
+
+function addEventListenerToButtons() {
+    buttons.forEach((b) => {
+  b.addEventListener("click", (event) => HandleEventListener(event));
+});
+} 
+
+createCardsArray()
+addEventListenerToButtons()
+CreateCardsElements('Reset');
