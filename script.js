@@ -1,23 +1,24 @@
 const buttons = document.querySelectorAll(".button");
 const displayCards = document.querySelector(".display-cards");
-const naipes = ["Paus", "Copas", "Ouros", "Espadas"];
+const suits = ["spades", "clubs", "diamonds", "hearts"];
 const cards = [];
+const SUITLENGTH = 13;
 let currentCardsDeck = [];
 
 function handleEventListener(event) {
   const elementTextContent = event.currentTarget.textContent;
 
   switch (elementTextContent) {
-    case "Reset":
+    case "reset":
       currentCardsDeck = [...cards];
       createCardsElements(currentCardsDeck);
       break;
-    case "Embaralhar":
+    case "shuffle":
       currentCardsDeck = [...shuffleArray(cards)];
       createCardsElements(currentCardsDeck);
       break;
     default:
-      createCardsElements(filterNaipe(elementTextContent));
+      createCardsElements(filterSuit(elementTextContent));
       break;
   }
 }
@@ -25,42 +26,49 @@ function handleEventListener(event) {
 function createCardsElements(cards) {
   nodeList = cards.map((n) => {
     const newDiv = document.createElement("div");
-    const newNaipe = document.createElement("p");
-    newNaipe.textContent = `${n.numero} - ${n.naipe}`;
-    newDiv.appendChild(newNaipe);
+    const newSuit = document.createElement("span");
+    newSuit.classList.add(`${n.suit}`);
+
+    const newParagraph = document.createElement("p");
+    newParagraph.textContent = `${n.number}`;
+
+    newDiv.appendChild(newParagraph);
+    newDiv.appendChild(newSuit);
     newDiv.classList.add("card");
+
     return newDiv;
   });
 
   return displayCards.replaceChildren(...nodeList);
 }
 
-function filterNaipe(naipeToFilter) {
-  return currentCardsDeck.filter((card) => card.naipe === naipeToFilter);
+function filterSuit(suitToFilter) {
+  return currentCardsDeck.filter((card) => card.suit === suitToFilter);
 }
 
 function createCardsArray() {
-  for (let a = 0; a < naipes.length; a++) {
-    for (let i = 0; i < 13; i++) {
+  suits.forEach((suit) => {
+    for (let i = 1; i <= SUITLENGTH; i++) {
+      let obj;
       switch (i) {
-        case 0:
-          obj = { naipe: naipes[a], numero: "A" };
-          break;
-        case 10:
-          obj = { naipe: naipes[a], numero: "J" };
+        case 1:
+          obj = { suit: suit, number: "A" };
           break;
         case 11:
-          obj = { naipe: naipes[a], numero: "Q" };
+          obj = { suit: suit, number: "J" };
           break;
         case 12:
-          obj = { naipe: naipes[a], numero: "K" };
+          obj = { suit: suit, number: "Q" };
+          break;
+        case 13:
+          obj = { suit: suit, number: "K" };
           break;
         default:
-          obj = { naipe: naipes[a], numero: `${i + 1}` };
+          obj = { suit: suit, number: `${i}` };
       }
       cards.push(obj);
     }
-  }
+  });
   currentCardsDeck = [...cards];
 }
 
